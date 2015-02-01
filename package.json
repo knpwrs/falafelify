@@ -32,6 +32,7 @@
   "devDependencies": {
     "bl": "^0.9.4",
     "chai": "^1.10.0",
+    "coveralls": "^2.11.2",
     "gulp": "^3.8.10",
     "gulp-spawn-mocha": "^2.0.1",
     "rewire": "^2.1.4",
