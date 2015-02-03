@@ -1,7 +1,12 @@
 describe('falafelify tests', function () {
   var rewire = require('rewire'),
-      falafelify = rewire('../lib'),
-      bl = require('bl');
+      Buffer = require('buffer').Buffer,
+      Readable = require('stream').Readable,
+      bl = require('bl'),
+      fs = require('fs');
+
+  var falafelify = rewire('../lib'),
+      browserify = rewire('browserify');
 
   describe('definition tests', function () {
     it('should be defined as a function with length 2', function () {
@@ -68,6 +73,62 @@ describe('falafelify tests', function () {
         setTimeout(done, 0);
       });
       f = falafelify(opts, iterator);
+    });
+  });
+
+  describe('integration tests', function () {
+    var bresolve, restore, bundler, src = '(' + function () {
+      var xs = [1, 2, [3, 4]];
+      var ys = [5, 6];
+      console.dir(xs, ys);
+    } + ')()';
+
+    beforeEach(function () {
+      // Fake fs.createReadStream
+      var s = new Readable();
+      s.push(src);
+      s.push(null);
+      sinon.stub(fs, 'createReadStream').returns(s);
+      // Fake browser-resolve
+      bresolve = sinon.stub().yields(null, 'foo');
+      restore = browserify.__set__('bresolve', bresolve);
+      // Create bundler
+      bundler = browserify().require('foo', {entry: true});
+    });
+
+    afterEach(function (done) {
+      bundler.bundle().pipe(bl(function (err, b) {
+        bresolve.should.be.calledOnce;
+        bresolve.should.be.calledWith('foo', sinon.match.object, sinon.match.func);
+        fs.createReadStream.should.be.calledOnce;
+        fs.createReadStream.should.be.calledWith('foo');
+        fs.createReadStream.restore();
+        var str = b.toString();
+        str.should.contain('var xs = fn([1, 2, fn([3, 4])]);');
+        str.should.contain('var ys = fn([5, 6]);');
+        restore();
+        restore = bundler = null;
+        done(err);
+      }));
+    });
+
+    it('should work with browserify', function () {
+      bundler.transform(falafelify(function (node) {
+        if (node.type === 'ArrayExpression') {
+          node.update('fn(' + node.source() + ')');
+        }
+      }));
+    });
+
+    it('should work with browserify (async)', function () {
+      bundler.transform(falafelify(function (node, done) {
+        setTimeout(function () {
+          if (node.type === 'ArrayExpression') {
+            node.update('fn(' + node.source() + ')');
+          }
+          done();
+        }, 0);
+      }));
     });
   });
 });
