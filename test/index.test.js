@@ -12,35 +12,61 @@ describe('falafelify tests', function () {
 
   describe('functionality tests', function () {
     var src = 'SOURCE', res = 'TARGET', node = 'NODE';
-    var falafelStub, restore, spy, f, opts;
+    var falafelSpy, restore, iterator, f, opts;
 
     beforeEach(function () {
-      falafelStub = sinon.stub().callsArgWith(2, node).returns(res);
-      restore = falafelify.__set__('falafel', falafelStub);
-      spy = sinon.spy();
+      // Not using a stub in order to synchronously iterate
+      falafelSpy = sinon.spy(function (b, o, f) {
+        for (var i = 0; i < 3; i++) {
+          f(node);
+        }
+        return res;
+      });
+      restore = falafelify.__set__('falafel', falafelSpy);
     });
 
     afterEach(function (done) {
       f.write(src);
       f.end();
       f.pipe(bl(function (err, b) {
-        falafelStub.should.be.calledWith(src, opts, spy);
-        spy.should.be.calledWith(node);
+        falafelSpy.should.be.calledWith(src, opts, sinon.match.func);
+        iterator.should.be.calledThrice;
+        iterator.should.be.calledWith(node);
         b.toString().should.equal(res);
         restore();
-        falafelStub = restore = spy = f = opts = null;
+        falafelSpy = restore = iterator = f = opts = null;
         done(err);
       }));
     });
 
     it('should call falafel with a given function when only one argument is given', function () {
       opts = {};
-      f = falafelify(spy)();
+      iterator = sinon.spy();
+      f = falafelify(iterator)();
+    });
+
+    it('should call falafel with a given function when only one argument is given (async)', function () {
+      opts = {};
+      // stubs don't have length, so we have to program our own spy :(
+      iterator = sinon.spy(function (node, done) {
+        setTimeout(done, 0);
+      });
+      f = falafelify(iterator)();
     });
 
     it('should call falafel with given options and function when two arguments are given', function () {
       opts = {foo: 'bar'};
-      f = falafelify(opts, spy)();
+      iterator = sinon.spy();
+      f = falafelify(opts, iterator)();
+    });
+
+    it('should call falafel with given options and function when two arguments are given (async)', function () {
+      opts = {foo: 'bar'};
+      // stubs don't have length, so we have to program our own spy :(
+      iterator = sinon.spy(function (node, done) {
+        setTimeout(done, 0);
+      });
+      f = falafelify(opts, iterator)();
     });
   });
 });
