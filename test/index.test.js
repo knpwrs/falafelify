@@ -26,6 +26,7 @@ describe('falafelify tests', function () {
     });
 
     afterEach(function (done) {
+      f = f();
       f.write(src);
       f.end();
       f.pipe(bl(function (err, b) {
@@ -42,7 +43,7 @@ describe('falafelify tests', function () {
     it('should call falafel with a given function when only one argument is given', function () {
       opts = {};
       iterator = sinon.spy();
-      f = falafelify(iterator)();
+      f = falafelify(iterator);
     });
 
     it('should call falafel with a given function when only one argument is given (async)', function () {
@@ -51,13 +52,13 @@ describe('falafelify tests', function () {
       iterator = sinon.spy(function (node, done) {
         setTimeout(done, 0);
       });
-      f = falafelify(iterator)();
+      f = falafelify(iterator);
     });
 
     it('should call falafel with given options and function when two arguments are given', function () {
       opts = {foo: 'bar'};
       iterator = sinon.spy();
-      f = falafelify(opts, iterator)();
+      f = falafelify(opts, iterator);
     });
 
     it('should call falafel with given options and function when two arguments are given (async)', function () {
@@ -66,7 +67,7 @@ describe('falafelify tests', function () {
       iterator = sinon.spy(function (node, done) {
         setTimeout(done, 0);
       });
-      f = falafelify(opts, iterator)();
+      f = falafelify(opts, iterator);
     });
   });
 });
