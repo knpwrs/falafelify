@@ -83,6 +83,12 @@ describe('falafelify tests', function () {
       console.dir(xs, ys);
     } + ')()';
 
+    function handleNode(node) {
+      if (node.type === 'ArrayExpression') {
+        node.update('fn(' + node.source() + ')');
+      }
+    }
+
     beforeEach(function () {
       // Fake fs.createReadStream
       var s = new Readable();
@@ -113,19 +119,13 @@ describe('falafelify tests', function () {
     });
 
     it('should work with browserify', function () {
-      bundler.transform(falafelify(function (node) {
-        if (node.type === 'ArrayExpression') {
-          node.update('fn(' + node.source() + ')');
-        }
-      }));
+      bundler.transform(falafelify(handleNode));
     });
 
     it('should work with browserify (async)', function () {
       bundler.transform(falafelify(function (node, done) {
         setTimeout(function () {
-          if (node.type === 'ArrayExpression') {
-            node.update('fn(' + node.source() + ')');
-          }
+          handleNode(node);
           done();
         }, 0);
       }));
