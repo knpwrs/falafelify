@@ -11,11 +11,11 @@ describe('falafelify tests', function () {
   });
 
   describe('functionality tests', function () {
-    var src = 'SOURCE', res = 'TARGET';
+    var src = 'SOURCE', res = 'TARGET', node = 'NODE';
     var falafelStub, restore, spy, f, opts;
 
     beforeEach(function () {
-      falafelStub = sinon.stub().returns(res);
+      falafelStub = sinon.stub().callsArgWith(2, node).returns(res);
       restore = falafelify.__set__('falafel', falafelStub);
       spy = sinon.spy();
     });
@@ -23,10 +23,11 @@ describe('falafelify tests', function () {
     afterEach(function (done) {
       f.write(src);
       f.end();
-      restore();
       f.pipe(bl(function (err, b) {
         falafelStub.should.be.calledWith(src, opts, spy);
+        spy.should.be.calledWith(node);
         b.toString().should.equal(res);
+        restore();
         falafelStub = restore = spy = f = opts = null;
         done(err);
       }));
