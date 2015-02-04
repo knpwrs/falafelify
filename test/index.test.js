@@ -76,6 +76,51 @@ describe('falafelify tests', function () {
     });
   });
 
+  describe('error handling tests', function () {
+    var src = 'SOURCE', res = 'TARGET', node = 'NODE';
+    var falafelSpy, restore, iterator, f, opts;
+
+    beforeEach(function () {
+      // Not using a stub in order to synchronously iterate
+      falafelSpy = sinon.spy(function (b, o, f) {
+        for (var i = 0; i < 3; i++) {
+          f(node);
+        }
+        return res;
+      });
+      restore = falafelify.__set__('falafel', falafelSpy);
+    });
+
+    afterEach(function (done) {
+      f = f();
+      f.write(src);
+      f.end();
+      f.pipe(bl(function (err, b) {
+        falafelSpy.should.be.calledWith(src, opts, sinon.match.func);
+        err.should.equal('error');
+        expect(b).to.not.be.ok;
+        restore();
+        done();
+      }));
+    });
+
+    it('should handle errors in async mode', function () {
+      opts = {};
+      iterator = sinon.spy(function (node, done) {
+        setTimeout(done, 0, 'error');
+      });
+      f = falafelify(iterator);
+    });
+
+    it('should handle errors in async mode with options', function () {
+      opts = {foo: 'bar'};
+      iterator = sinon.spy(function (node, done) {
+        setTimeout(done, 0, 'error');
+      });
+      f = falafelify(opts, iterator);
+    });
+  });
+
   describe('integration tests', function () {
     var bresolve, restore, bundler, src = '(' + function () {
       var xs = [1, 2, [3, 4]];
