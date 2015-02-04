@@ -8,6 +8,18 @@ This is a [browserify][b] [transform][t] that runs your files through
 [falafel][f]. Basically you can alter your scripts by modifying the abstract
 syntax tree that they are parsed in to.
 
+## Installation
+
+```sh
+npm i --save falafelify
+```
+
+Or if you want something a little more fresh:
+
+```sh
+npm i --save KenPowers/falafelify
+```
+
 ## Usage
 
 Here are some examples that I ~~stole~~ ~~borrowed~~ adapted from [falafel][f]
