@@ -33,7 +33,7 @@ call.
 
 ```js
 var browserify = require('browserify'),
-    falafelify = require('../../'),
+    falafelify = require('falafelify'),
     fs = require('fs');
 
 // Browserify build
@@ -77,7 +77,7 @@ console.log(beep 'boop', 'BOOP');
 
 ```js
 var browserify = require('browserify'),
-    falafelify = require('../../'),
+    falafelify = require('falafelify'),
     fs = require('fs');
 
 // Determines if a given identifier is a keyword
@@ -126,7 +126,7 @@ console.log(2 / 2);
 
 ```js
 var browserify = require('browserify'),
-    falafelify = require('../../'),
+    falafelify = require('falafelify'),
     fs = require('fs');
 
 // Determines if a node represents a binary math expression
