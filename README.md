@@ -180,6 +180,21 @@ console.log(1);
 },{}]},{},[1]);
 ```
 
+## API
+
+All of the following invocations are valid:
+
+```js
+// Just a function (callback optional)
+falafelify(fn);
+// Options and function
+falafelify(opts, fn);
+// Function and parallel limit (number)
+falafelify(fn, limit);
+// Options, function, and parallel limit (number)
+falafelify(opts, fn, limit);
+```
+
 ## License
 
 The MIT License (MIT)
