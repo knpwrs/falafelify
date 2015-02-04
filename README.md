@@ -1,4 +1,4 @@
-# falafelify
+# falafelify [![Build Status](https://travis-ci.org/KenPowers/falafelify.svg?branch=master)](https://travis-ci.org/KenPowers/falafelify) [![Coverage Status](https://coveralls.io/repos/KenPowers/falafelify/badge.svg?branch=master)](https://coveralls.io/r/KenPowers/falafelify?branch=master)
 
 Serve up fresh [falafel][f] from your [browserify][b] bundles.
 
