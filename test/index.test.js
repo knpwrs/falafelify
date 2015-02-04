@@ -59,62 +59,64 @@ describe('falafelify tests', function () {
       }));
     });
 
-    it('should call falafel with a given function', function () {
-      opts = {};
-      limit = 10;
-      iterator = sinon.spy();
-      f = falafelify(iterator);
+    [{
+      it: 'should call falafel with a given function',
+      spy: sinon.spy()
+    }, {
+      it: 'should call falafel with a given function (async)',
+      spy: getAsyncSpy()
+    }].forEach(function (o) {
+      it(o.it, function () {
+        opts = {};
+        limit = 10;
+        iterator = o.spy;
+        f = falafelify(iterator);
+      });
     });
 
-    it('should call falafel with a given function (async)', function () {
-      opts = {};
-      limit = 10;
-      iterator = getAsyncSpy();
-      f = falafelify(iterator);
+    [{
+      it: 'should call falafel with given options and function',
+      spy: sinon.spy()
+    }, {
+      it: 'should call falafel with given options and function (async)',
+      spy: getAsyncSpy()
+    }].forEach(function (o) {
+      it(o.it, function () {
+        opts = {foo: 'bar'};
+        limit = 10;
+        iterator = o.spy;
+        f = falafelify(opts, iterator);
+      });
     });
 
-    it('should call falafel with given options and function', function () {
-      opts = {foo: 'bar'};
-      limit = 10;
-      iterator = sinon.spy();
-      f = falafelify(opts, iterator);
+    [{
+      it: 'should call falafel with given function and limit (not that it matters when not async)',
+      spy: sinon.spy()
+    }, {
+      it: 'should call falafel with given function and limit (async)',
+      spy: getAsyncSpy()
+    }].forEach(function (o) {
+      it(o.it, function () {
+        opts = {};
+        limit = 20;
+        iterator = o.spy;
+        f = falafelify(iterator, limit);
+      });
     });
 
-    it('should call falafel with given options and function (async)', function () {
-      opts = {foo: 'bar'};
-      limit = 10;
-      // stubs don't have length, so we have to program our own spy :(
-      iterator = getAsyncSpy();
-      f = falafelify(opts, iterator);
-    });
-
-    it('should call falafel with given function and limit (not that it matters when not async)', function () {
-      opts = {};
-      limit = 20;
-      iterator = sinon.spy();
-      f = falafelify(iterator, limit);
-    });
-
-    it('should call falafel with given function and limit (async)', function () {
-      opts = {};
-      limit = 20;
-      // stubs don't have length, so we have to program our own spy :(
-      iterator = getAsyncSpy();
-      f = falafelify(iterator, limit);
-    });
-
-    it('should call call falafel with given options, function, and limit (not that it matters when not async)', function () {
-      opts = {foo: 'bar'};
-      limit = 20;
-      iterator = sinon.spy();
-      f = falafelify(opts, iterator, limit);
-    });
-
-    it('should call call falafel with given options, function, and limit (async)', function () {
-      opts = {foo: 'bar'};
-      limit = 20;
-      iterator = getAsyncSpy();
-      f = falafelify(opts, iterator, limit);
+    [{
+      it: 'should call call falafel with given options, function, and limit (not that it matters when not async)',
+      spy: sinon.spy()
+    }, {
+      it: 'should call call falafel with given options, function, and limit (async)',
+      spy: getAsyncSpy()
+    }].forEach(function (o) {
+      it(o.it, function () {
+        opts = {foo: 'bar'};
+        limit = 20;
+        iterator = o.spy;
+        f = falafelify(opts, iterator, limit);
+      });
     });
   });
 
