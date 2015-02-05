@@ -33,6 +33,7 @@ function evaluate(node, done) {
 
 // Browserify build
 browserify('./async')
+  // First argument is the iterator, second argument is the parallel limit.
   .transform(falafelify(function (node, done) {
     if (basicMath(node)) {
       evaluate(node, done);
@@ -40,6 +41,6 @@ browserify('./async')
       // Make sure you ALWAYS call done.
       done();
     }
-  }))
+  }, 20))
   .bundle()
   .pipe(fs.createWriteStream('out.js'));

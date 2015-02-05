@@ -122,8 +122,9 @@ console.log(String('boop').toUppercase(), 'BOOP');
 ### Async
 
 Unlike the regular [falafel][f], falafelify lets you use async functions as
-your iterator using standard node callbacks. This example shows how to update
-ast nodes asynchronously:
+your iterator using standard node callbacks (by default running 10
+asynchronous operations at a time). This example shows how to update ast nodes
+asynchronously while changing the limit from 10 to 20:
 
 `async.js`:
 
@@ -172,6 +173,7 @@ function evaluate(node, done) {
 
 // Browserify build
 browserify('./async')
+  // First argument is the iterator, second argument is the parallel limit.
   .transform(falafelify(function (node, done) {
     if (basicMath(node)) {
       evaluate(node, done);
@@ -179,7 +181,7 @@ browserify('./async')
       // Make sure you ALWAYS call done.
       done();
     }
-  }))
+  }, 20))
   .bundle()
   .pipe(fs.createWriteStream('out.js'));
 ```
@@ -198,6 +200,9 @@ console.log(1);
 },{}]},{},[1]);
 ```
 
+By default falafelify will only run 10 asynchronous operations at the same
+time. If this isn't enough for you then see the next section, *API*.
+
 ## API
 
 All of the following invocations are valid:
@@ -207,9 +212,9 @@ All of the following invocations are valid:
 falafelify(fn);
 // Options and function
 falafelify(opts, fn);
-// Function and parallel limit (number)
+// Function and parallel limit (number, defaults to 10)
 falafelify(fn, limit);
-// Options, function, and parallel limit (number)
+// Options, function, and parallel limit (number, defaults to 10)
 falafelify(opts, fn, limit);
 ```
 
