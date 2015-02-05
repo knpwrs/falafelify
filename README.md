@@ -200,6 +200,17 @@ console.log(1);
 },{}]},{},[1]);
 ```
 
+Of course you could also be [evil][e] and use `eval`:
+
+```js
+function evaluate(node, done) {
+  setTimeout(function () {
+    node.update(eval(node.source()));
+    done();
+  }, Math.floor(Math.random() * 1000));
+}
+```
+
 By default falafelify will only run 10 asynchronous operations at the same
 time. If this isn't enough for you then see the next section, *API*.
 
@@ -243,5 +254,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 [b]: http://browserify.org/ "browserify"
+[e]: http://jshint.com/docs/options/#evil "JSHint evil Option"
 [f]: https://www.npmjs.com/package/falafel "falafel"
 [t]: https://github.com/substack/node-browserify/wiki/list-of-transforms "List of browserify transforms."
