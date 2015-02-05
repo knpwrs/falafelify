@@ -168,7 +168,7 @@ function evaluate(node, done) {
     }
     // Make sure you ALWAYS call done.
     done();
-  }, Math.floor(Math.random() * 1000));
+  }, 250);
 }
 
 // Browserify build
@@ -207,7 +207,7 @@ function evaluate(node, done) {
   setTimeout(function () {
     node.update(eval(node.source()));
     done();
-  }, Math.floor(Math.random() * 1000));
+  }, 250);
 }
 ```
 

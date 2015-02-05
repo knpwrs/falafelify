@@ -16,7 +16,7 @@ function evaluate(node, done) {
   setTimeout(function () {
     node.update(eval(node.source()));
     done();
-  }, Math.floor(Math.random() * 1000));
+  }, 250);
 }
 
 // Browserify build
