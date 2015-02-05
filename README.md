@@ -143,10 +143,14 @@ var browserify = require('browserify'),
 
 // Determines if a node represents a binary math expression
 function basicMath(node) {
-  return node.type === 'BinaryExpression' && '+-*/'.indexOf(node.operator) > -1;
+  return node.type === 'BinaryExpression'
+    && '+-*/'.indexOf(node.operator) > -1
+    && node.left.type === 'Literal'
+    && node.right.type === 'Literal';
 }
 
-// Async function which basic binary math expressions
+// Async function which, given a BinaryExpression node, performs basic binary
+// math expressions and updates the node with the calculated value.
 function evaluate(node, done) {
   var o = node.operator, left = node.left.value, right = node.right.value;
   setTimeout(function () {
@@ -161,6 +165,7 @@ function evaluate(node, done) {
     } else {
       return done(new Error('Invalid operator.'));
     }
+    // Make sure you ALWAYS call done.
     done();
   }, Math.floor(Math.random() * 1000));
 }
@@ -171,6 +176,7 @@ browserify('./async')
     if (basicMath(node)) {
       evaluate(node, done);
     } else {
+      // Make sure you ALWAYS call done.
       done();
     }
   }))
