@@ -1,5 +1,7 @@
 # falafelify [![Build Status](https://travis-ci.org/KenPowers/falafelify.svg?branch=master)](https://travis-ci.org/KenPowers/falafelify) [![Coverage Status](https://coveralls.io/repos/KenPowers/falafelify/badge.svg?branch=master)](https://coveralls.io/r/KenPowers/falafelify?branch=master)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/knpwrs/falafelify.svg)](https://greenkeeper.io/)
+
 Serve up fresh [falafel][f] from your [browserify][b] bundles.
 
 ## What?
